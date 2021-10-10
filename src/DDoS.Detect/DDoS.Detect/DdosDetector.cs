@@ -9,7 +9,7 @@ namespace DDoS.Detect
 		//Список разрешенных адресов
 		private static readonly string[] _ipWhiteList = new[]
 		{
-			"",
+			"127.0.0.1",
 		};
 
 		//Период проверки в миллисекундах
