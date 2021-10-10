@@ -16,7 +16,7 @@ namespace DDoS.Detect
 		private static readonly int _requestFrequency = 60000;
 
 		//Максимальная частота запросов за период
-		private static readonly int _requestThreshold = 10;
+		private static readonly int _requestThreshold = 1000;
 
 		private static Dictionary<string, List<DateTime>> _ipHistory = new Dictionary<string, List<DateTime>>();
 
