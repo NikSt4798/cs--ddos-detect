@@ -3,7 +3,6 @@ using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading;
 
 namespace DDoS.Detect
 {
@@ -34,6 +33,19 @@ namespace DDoS.Detect
                     TcpClient client = server.AcceptTcpClient();
                     Console.WriteLine("Подключен клиент. Выполнение запроса...");
 
+                    var endPoint = client.Client.RemoteEndPoint as IPEndPoint;
+
+                    if (DdosDetector.CheckDdos(endPoint?.Address.ToString()))
+					{
+                        Console.WriteLine("Слишком много запросов, угроза DDoS атаки");
+
+                        //Отправляем сообщение о возможной атаке любым удобным способом
+                        _notificationService?.Notify($"Угроза DDoS атаки с ip адреса {endPoint?.Address.ToString()}");
+                        // закрываем подключение
+                        client.Close();
+                        continue;
+                    }
+
                     // получаем сетевой поток для чтения и записи
                     NetworkStream stream = client.GetStream();
 
@@ -60,26 +72,6 @@ namespace DDoS.Detect
                 if (server != null)
                     server.Stop();
             }
-
-            while (true)
-			{
-				var result = DdosCheck();
-
-				if (!string.IsNullOrEmpty(result))
-				{
-					_notificationService.Notify(result);
-					return;
-				}
-
-				Thread.Sleep(60000);
-			}
-		}
-
-		public static string DdosCheck()
-		{
-
-
-			return string.Empty;
 		}
 	}
 }
